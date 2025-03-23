@@ -35,6 +35,41 @@ namespace vdf_binary {
             std::uint64_t
         >;
 
+        struct kv_value{
+            operator key_value&(){
+                return *std::get<std::shared_ptr<key_value>>(var);
+            }
+            operator std::string(){
+                return std::get<std::string>(var);
+            }
+
+            operator std::int32_t(){
+                return std::get<std::int32_t>(var);
+            }
+
+            operator float(){
+                return std::get<float>(var);
+            }
+
+            operator std::wstring(){
+                return std::get<std::wstring>(var);
+            }
+
+            operator void*(){
+                return std::get<void*>(var);
+            }
+
+            operator kv_color(){
+                return std::get<kv_color>(var);
+            }
+
+            operator std::uint64_t(){
+                return std::get<std::uint64_t>(var);
+            }
+
+            kv_variant var;
+        };
+
         enum type {
             TYPE_NONE,
             TYPE_STRING,
@@ -94,10 +129,15 @@ namespace vdf_binary {
                     default:
                         throw std::exception("whatthefuck");
                 }
-                pairs[name] = v;
+                pairs[name].var = v;
             }
         }
-        std::map<std::string,kv_variant> pairs;
+        
+        kv_value& operator[](std::string key){
+            return pairs[key];
+        }
+
+        std::map<std::string, kv_value> pairs;
     };
 }
 #endif
